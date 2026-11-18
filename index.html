@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Constructos base, conceptos y mapa del proyecto de título Dependencia celular.">
+<meta name="robots" content="noindex">
+<title>Constructos base: Dependencia celular</title>
+<style>
+:root{
+--charcoal-blue:#2b4052;--blue-slate:#3f5e78;--slate-grey:#5d7b96;--slate-mist:#6e889f;--cool-steel:#8a9fb2;--alabaster-grey:#d2dae2;
+--royal-plum:#7d075c;--grape-soda:#933c7e;--amethyst-smoke:#a8719f;
+--surface:#f4f6f8;--surface-raised:#fff;--accent-soft:#f6eaf2;--text-primary:#2b4052;--text-secondary:#3f5e78;
+--accent:#7d075c;--accent-hover:#933c7e;--border:#d2dae2;--border-strong:#5d7b96;--band:#2b4052;--on-band:#fff;--on-band-muted:#d2dae2;
+--font-sans:"Arial Nova",Arial,"Helvetica Neue",Helvetica,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--surface);color:var(--text-primary);font:400 16px/24px var(--font-sans)}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;padding:32px 16px;border-right:1px solid var(--border);background:var(--surface-raised)}
+.side .brand{font:700 12px/16px var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);padding:0 12px 4px}
+.side .proj{font:700 20px/26px var(--font-sans);padding:0 12px 24px;margin:0}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav a{display:block;text-decoration:none;color:var(--text-primary);font:400 14px/20px var(--font-sans);padding:10px 12px;border-radius:999px;border:2px solid transparent}
+.nav a small{display:block;font:400 12px/16px var(--font-sans);color:var(--text-secondary);letter-spacing:.02em}
+.nav a:hover{background:var(--surface)}
+.nav a.on{background:var(--accent-soft);border-color:var(--accent);font-weight:700}
+.nav .sep{height:1px;background:var(--border);margin:8px 12px}
+main{padding:32px;max-width:1180px;width:100%}
+.view{display:none}.view.on{display:block}
+.label{font:700 12px/16px var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin:0 0 8px}
+.meta{font:400 12px/16px var(--font-sans);letter-spacing:.02em;color:var(--text-secondary)}
+h1{font:700 36px/42px var(--font-sans);letter-spacing:-.01em;margin:0 0 8px}
+h2{font:700 28px/34px var(--font-sans);margin:48px 0 16px}
+h3{font:700 20px/26px var(--font-sans);margin:0 0 8px}
+h4{font:700 16px/22px var(--font-sans);margin:0 0 4px}
+p{margin:0 0 12px;max-width:72ch}
+.t{font-weight:700;border-bottom:1px dotted var(--slate-grey)}
+.band{background:var(--band);color:var(--on-band);border-radius:24px;padding:32px;margin:24px 0 0}
+.band .label{color:var(--on-band-muted)}
+.band .big{font:700 28px/36px var(--font-sans);letter-spacing:-.01em;margin:0 0 12px;max-width:36ch}
+.band .def{font:400 20px/30px var(--font-sans);margin:0 0 12px;max-width:62ch}
+.band p{max-width:68ch}
+.band .meta{color:var(--on-band-muted)}
+.band .t{border-bottom-color:var(--cool-steel)}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{background:var(--surface-raised);border:1px solid var(--border);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:8px}
+.card p{margin:0;font:400 14px/20px var(--font-sans)}
+.card.sel{background:var(--accent-soft);border:2px solid var(--accent);padding:23px}
+.chip{display:inline-block;font:700 12px/16px var(--font-sans);letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px;background:var(--alabaster-grey);color:var(--text-primary)}
+.chip.pl{background:var(--accent);color:#fff}
+.chip.dk{background:var(--band);color:#fff}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+blockquote{margin:0;font:400 16px/24px var(--font-sans)}
+.q{border-left:4px solid var(--amethyst-smoke);border-radius:0 16px 16px 0;background:var(--surface-raised);border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;flex-direction:column;gap:8px}
+.q .why{font:400 14px/20px var(--font-sans);color:var(--text-secondary)}
+.pv{font-style:normal;color:var(--text-secondary)}
+ol.args{list-style:none;counter-reset:a;margin:0;padding:0;display:grid;gap:16px}
+ol.args li{counter-increment:a;background:var(--surface-raised);border:1px solid var(--border);border-radius:16px;padding:24px 24px 24px 72px;position:relative}
+ol.args li::before{content:counter(a);position:absolute;left:24px;top:22px;width:32px;height:32px;border-radius:999px;background:var(--band);color:#fff;font:700 14px/32px var(--font-sans);text-align:center}
+ol.args p{margin:0 0 8px;font:400 14px/20px var(--font-sans)}
+ol.args .src{margin:0;color:var(--text-secondary);font:400 12px/16px var(--font-sans);letter-spacing:.02em}
+ol.args .own{margin:8px 0 0;padding:12px 16px;border:1px dashed var(--border-strong);border-radius:12px;font:400 13px/19px var(--font-sans);color:var(--text-secondary)}
+.note{border:1px dashed var(--border-strong);border-radius:16px;padding:16px 24px;font:400 14px/20px var(--font-sans);color:var(--text-secondary);margin:16px 0}
+.mini,.circ{background:var(--surface-raised);border:1px solid var(--border);border-radius:24px;padding:16px;margin:16px 0}
+.mini svg,.circ svg{width:100%;height:auto;display:block}
+svg text{font-family:var(--font-sans)}
+.mapwrap{background:var(--surface-raised);border:1px solid var(--border);border-radius:24px;overflow:auto;margin:16px 0}
+.mapwrap svg{display:block;min-width:1180px;width:100%;height:auto}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.fbtn{font:700 12px/16px var(--font-sans);letter-spacing:.08em;text-transform:uppercase;padding:10px 16px;border-radius:999px;border:1px solid var(--border-strong);background:var(--surface-raised);color:var(--text-primary);cursor:pointer}
+.fbtn[aria-pressed="true"]{background:var(--accent-soft);border:2px solid var(--accent);padding:9px 15px}
+.node{cursor:pointer}
+.node rect{transition:opacity .15s}
+.dim{opacity:.12}
+.edge{stroke:var(--cool-steel);stroke-width:1;fill:none;opacity:.45}
+.edge.main{stroke:var(--charcoal-blue);stroke-width:2.5;opacity:.9}
+.edge.hi{stroke:var(--accent);stroke-width:2;opacity:1}
+.edge.ux{stroke:var(--grape-soda);stroke-dasharray:5 4;opacity:.55}
+.edge.ux.hi{stroke:var(--accent);opacity:1}
+.edge.vac{stroke:var(--accent);opacity:.35}
+.edge.vac.hi{opacity:1}
+.edge.gen{stroke:var(--charcoal-blue);stroke-dasharray:3 4;stroke-width:1.5;opacity:.7}
+#detail{min-height:120px}
+.cbub{display:flex;gap:8px;flex-wrap:wrap}
+.cb{font:700 14px/20px var(--font-sans);padding:10px 18px;border-radius:999px;border:1px solid var(--border-strong);background:var(--surface-raised);color:var(--text-primary);cursor:pointer}
+.cb:hover{background:var(--surface)}
+.cb[aria-expanded="true"]{background:var(--accent-soft);border:2px solid var(--accent);padding:9px 17px}
+.cpanel{margin-top:12px}
+.cpanel .card{gap:6px}
+.cpanel .card p{font:400 15px/22px var(--font-sans);max-width:72ch}
+.vac h3{margin-top:8px}
+.vac ul{margin:0 0 12px;padding-left:20px;max-width:72ch}
+.vac li{margin-bottom:6px}
+.band .vac ul{color:var(--on-band)}
+.own2{border:1px dashed var(--border-strong);border-radius:12px;padding:8px 12px;font:400 13px/19px var(--font-sans);color:var(--text-secondary);display:inline-block}
+.band .own2{color:var(--on-band-muted);border-color:var(--cool-steel)}
+.refs p{font:400 14px/20px var(--font-sans);padding-left:32px;text-indent:-32px;max-width:90ch;margin-bottom:12px;overflow-wrap:anywhere}
+@media (max-width:900px){
+.app{grid-template-columns:1fr}
+.side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--border);padding:16px}
+.side .proj{padding-bottom:12px}
+.nav{flex-direction:row;overflow-x:auto;padding-bottom:4px}
+.nav a{white-space:nowrap}.nav a small{display:none}.nav .sep{display:none}
+main{padding:24px 16px}
+.g2,.g3{grid-template-columns:1fr}
+h1{font-size:30px;line-height:36px}h2{font-size:24px;line-height:30px}
+.band{padding:24px}.band .big{font-size:22px;line-height:30px}.band .def{font-size:17px;line-height:26px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+<div class="brand">Proyecto de título</div>
+<p class="proj">Dependencia celular</p>
+<nav class="nav" id="nav" aria-label="Secciones">
+<a href="#proyecto">Proyecto<small>El problema en total</small></a>
+<div class="sep"></div>
+<a href="#c1">C1 Uso problemático<small>Vector sistémico</small></a>
+<a href="#c2">C2 Mecanismos adictivos<small>Vector tecnológico</small></a>
+<a href="#c3">C3 Hábito de chequeo<small>Vector humano</small></a>
+<a href="#c4">C4 Intencionalidad<small>Vector humano</small></a>
+<div class="sep"></div>
+<a href="#mapa">Mapa general<small>Todo conectado</small></a>
+<a href="#referencias">Referencias<small>Lista aprobada, APA 7</small></a>
+</nav>
+</aside>
+<main>
+
+<section class="view" id="v-proyecto">
+<p class="label">Visión general</p>
+<h1>El proyecto en total</h1>
+<p class="meta">ACTUALIZADO 2026-11-18 · Basado únicamente en las fuentes cargadas en el proyecto</p>
+<div class="band">
+<p class="label">En una frase</p>
+<p class="big">Diseño una alternativa para desentrenar el gesto de revisar el celular sin propósito en universitarias de 20 a 24 años, mientras estudian solas.</p>
+<p class="def">Lo hago a partir de entender cómo se relacionan los mecanismos adictivos del diseño, el hábito de chequeo y la intencionalidad de uso con que el uso del smartphone se vuelva problemático.</p>
+</div>
+<h2>Qué, cuál y por qué</h2>
+<div class="grid g3">
+<div class="card"><p class="label">Qué estoy haciendo</p><p>Una investigación de diseño sobre el momento en que se toma y se desbloquea el teléfono, para llegar a diseñar una alternativa que ocupe el lugar de ese gesto cuando no tiene propósito.</p></div>
+<div class="card"><p class="label">Cuál es el problema</p><p>Revisar el celular dejó de ser una decisión. Es un gesto automático que la persona inicia sola: en Heitmayer y Lahlou (2021), el 89% de las interacciones las inició el usuario y no una notificación. Y el uso que parte sin un objetivo es el que más se lamenta después (Guo et al., 2025).</p></div>
+<div class="card"><p class="label">Por qué es problemático</p><p>Porque es un <span class="t">círculo vicioso</span>: está diseñado para que ocurra (Monge Roffarello et al., 2023) y se alimenta solo, porque el malestar gatilla el uso y el uso sin sentido deja malestar. Combina <span class="t">pérdida de control</span> con consecuencias en la vida diaria (Vanden Abeele, 2021), sin llegar a ser reconocido como una adicción (Panova &amp; Carbonell, 2018).</p></div>
+</div>
+<h2>Usuaria y contexto</h2>
+<div class="grid g2">
+<div class="card sel"><p class="label">Decidido 2026-11-17</p><h3>Mujeres de 20 a 24 años, estudiando solas con el teléfono a la vista</h3><p>Es el contexto con más respaldo en la bibliografía, el más observable y el único que contiene el círculo vicioso completo: la tarea difícil genera malestar, el malestar gatilla el chequeo y el chequeo deja culpa y trabajo atrasado.</p></div>
+<div class="card"><p class="label">Por qué este contexto</p><p>Vanden Abeele (2021) describe el estudio como un conflicto de metas, donde hay que sopesar la recompensa inmediata contra un objetivo lejano. Anderson y Wood (2020) citan que los estudiantes inseguros sobre cómo resolver una tarea procrastinaban más revisando redes, sobre todo los más habituales. Y la sola visibilidad del teléfono basta para activar un estado de vigilancia (Vanden Abeele, 2021).</p><p class="meta">En la revisión de Mostyn Sullivan y George (2023), la mayoría de los estudios reporta niveles más altos de uso problemático en mujeres, y en un estudio citado ahí el <span class="t">uso compensatorio</span> fue el predictor más fuerte en ellas.</p></div>
+</div>
+<h2>Cómo se arma el problema</h2>
+<p>Los cuatro constructos no están en fila: forman un <span class="t">círculo vicioso</span> que se sostiene solo, con el diseño en el centro alimentándolo. La usuaria y el contexto no son parte del círculo: la usuaria es quien lo vive y el contexto es donde ocurre.</p>
+<div class="circ">
+<svg viewBox="0 0 1000 480" role="img" aria-label="Círculo vicioso: el hábito de chequeo desplaza la intencionalidad, que deriva en uso problemático, que deja malestar, que vuelve a gatillar el hábito. En el centro, los mecanismos adictivos alimentan cada paso.">
+<defs><marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#2b4052"/></marker>
+<marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7d075c"/></marker></defs>
+<path d="M568 102 A150 150 0 0 1 652 198" fill="none" stroke="#2b4052" stroke-width="2.5" marker-end="url(#a1)"/>
+<path d="M652 292 A150 150 0 0 1 568 388" fill="none" stroke="#2b4052" stroke-width="2.5" marker-end="url(#a1)"/>
+<path d="M432 388 A150 150 0 0 1 348 292" fill="none" stroke="#2b4052" stroke-width="2.5" marker-end="url(#a1)"/>
+<path d="M348 198 A150 150 0 0 1 432 102" fill="none" stroke="#2b4052" stroke-width="2.5" marker-end="url(#a1)"/>
+<text x="690" y="160" font-size="13" font-weight="700" fill="#2b4052">desplaza a</text>
+<text x="672" y="360" font-size="13" font-weight="700" fill="#2b4052">deriva en</text>
+<text x="238" y="360" font-size="13" font-weight="700" fill="#2b4052">deja</text>
+<text x="240" y="160" font-size="13" font-weight="700" fill="#2b4052">vuelve a gatillar</text>
+<line x1="500" y1="216" x2="500" y2="108" stroke="#7d075c" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#a2)"/>
+<line x1="560" y1="245" x2="676" y2="245" stroke="#7d075c" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#a2)"/>
+<line x1="500" y1="274" x2="500" y2="382" stroke="#7d075c" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#a2)"/>
+<line x1="440" y1="245" x2="324" y2="245" stroke="#7d075c" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#a2)"/>
+<rect x="470" y="150" width="60" height="18" fill="#fff"/><text x="500" y="163" text-anchor="middle" font-size="12" font-weight="700" fill="#7d075c">fabrica</text>
+<rect x="610" y="236" width="56" height="18" fill="#fff"/><text x="638" y="249" text-anchor="middle" font-size="12" font-weight="700" fill="#7d075c">desvía</text>
+<rect x="463" y="320" width="74" height="18" fill="#fff"/><text x="500" y="333" text-anchor="middle" font-size="12" font-weight="700" fill="#7d075c">amplifica</text>
+<rect x="328" y="236" width="68" height="18" fill="#fff"/><text x="362" y="249" text-anchor="middle" font-size="12" font-weight="700" fill="#7d075c">refuerza</text>
+<g><rect x="406" y="48" width="188" height="56" rx="20" fill="#2b4052"/><text x="500" y="72" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">C3 Hábito</text><text x="500" y="90" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">de chequeo</text></g>
+<g><rect x="676" y="217" width="196" height="56" rx="20" fill="#2b4052"/><text x="774" y="241" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">C4 Intencionalidad</text><text x="774" y="259" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">de uso</text></g>
+<g><rect x="406" y="386" width="188" height="56" rx="20" fill="#2b4052"/><text x="500" y="410" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">C1 Uso</text><text x="500" y="428" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">problemático</text></g>
+<g><rect x="128" y="217" width="196" height="56" rx="20" fill="#f6eaf2" stroke="#7d075c" stroke-width="1.5"/><text x="226" y="241" text-anchor="middle" font-size="15" font-weight="700" fill="#2b4052">Malestar</text><text x="226" y="259" text-anchor="middle" font-size="13" fill="#3f5e78">aburrimiento, estrés, culpa</text></g>
+<g><rect x="396" y="216" width="208" height="58" rx="20" fill="#7d075c"/><text x="500" y="240" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">C2 Mecanismos</text><text x="500" y="258" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">adictivos</text></g>
+</svg>
+</div>
+<div class="note">Sobre el orden de lectura: el círculo parte en C3 porque ahí está el gesto, pero las fichas empiezan en C1 porque es el constructo que define de qué estamos hablando. Los otros tres se describen en relación a él, así que necesita estar antes.</div>
+<h2>Dos conceptos generales que hay que distinguir</h2>
+<p>Atraviesan los cuatro constructos y se confunden con facilidad. El proyecto mide el segundo, no el primero.</p>
+<div class="grid g2">
+<div class="card"><p class="label">Mide la duración</p><h3>Tiempo en pantalla (TeP)</h3><p>Minutos de pantalla al día. Es la medida más usada y la que menos dice: no distingue cuántas veces se toma el teléfono ni con qué propósito. En Dekker et al. (2025), participantes con más de cinco horas diarias no reportaban problemas sustanciales, y recortar el TeP sacrifica también lo que el uso tiene de valioso (Vanden Abeele, 2021).</p><p class="meta">Se cruza con C1 y C2: es lo que las plataformas optimizan y lo que no define el uso problemático.</p></div>
+<div class="card sel"><p class="label">Mide el gesto</p><h3>Desbloqueo</h3><p>Iniciar una sesión: desbloquear, hacer una serie de actividades y volver a bloquear (Dekker et al., 2025). Mide la frecuencia del gesto, que es lo que el hábito repite y lo que el contexto no cambia: cerca de un desbloqueo cada cinco minutos, en cualquier lugar (Heitmayer &amp; Lahlou, 2021). Es la unidad de observación del proyecto.</p><p class="meta">Se cruza con C3 y C4: es donde aparece el hábito y donde se decide, o no, el propósito.</p></div>
+</div>
+<div class="band" id="vacio-band"></div>
+</section>
+
+<section class="view" id="v-c"></section>
+
+<section class="view" id="v-mapa">
+<p class="label">Mapa general</p>
+<h1>Todo conectado</h1>
+<p class="meta">ACTUALIZADO 2026-11-18 · Toca un nodo para ver qué es y con qué se conecta</p>
+<div class="filters" id="filters">
+<button class="fbtn" data-t="k" aria-pressed="true">Conceptos</button>
+<button class="fbtn" data-t="a" aria-pressed="true">Autores</button>
+<button class="fbtn" data-t="u" aria-pressed="true">Usuaria y contexto</button>
+<button class="fbtn" id="reset" aria-pressed="false">Limpiar selección</button>
+</div>
+<div class="mapwrap"><svg id="gmap" viewBox="0 0 1500 1040" role="img" aria-label="Mapa de constructos, conceptos, autores e ideas"></svg></div>
+<div class="card" id="detail"><p class="label">Detalle</p><p>Selecciona un nodo del mapa. Las flechas gruesas entre constructos forman el círculo vicioso. Las líneas delgadas unen cada concepto con los autores que lo sostienen; las punteadas moradas conectan a la usuaria y el contexto, que no son parte del círculo sino quién lo vive y dónde ocurre. Al centro está el vacío: selecciónalo para ver la bajada a diseño.</p></div>
+<div class="row" style="margin-top:16px">
+<span class="chip dk">Constructo</span>
+<span class="chip">Concepto</span>
+<span class="chip" style="background:#fff;border:1px solid #5d7b96">Autor</span>
+<span class="chip" style="background:#fff;border:2px solid #2b4052">Concepto general</span>
+<span class="chip" style="background:#f6eaf2;border:2px solid #7d075c">Usuaria y contexto</span>
+<span class="chip pl">El vacío</span>
+</div>
+</section>
+
+<section class="view" id="v-referencias">
+<p class="label">Lista aprobada</p>
+<h1>Referencias</h1>
+<p class="meta">ACTUALIZADO 2026-11-18 · APA 7 · Citas textuales en su idioma original</p>
+<div class="note">Dónde falta un dato lo marqué entre corchetes en vez de completarlo de memoria. En las citas textuales, el número de página aparece solo cuando pude confirmarlo en el PDF; el resto dice [p. por verificar].</div>
+<div class="refs" id="refs"></div>
+</section>
+
+</main>
+</div>
+<script>
+const PV='<span class="pv">[p. por verificar]</span>';
+const NAMES={c1:'Uso problemático',c2:'Mecanismos adictivos',c3:'Hábito de chequeo',c4:'Intencionalidad de uso'};
+const C={
+c1:{vec:'Sistémico',
+def:`Patrón de uso del smartphone marcado por pérdida de control y deterioro funcional en la vida diaria, que no alcanza la severidad de una adicción. Se entiende como un continuo, no como un diagnóstico, y depende de qué aplicaciones se usan, con qué propósito y en qué contexto.`,
+defsrc:`Definición del proyecto, construida desde Panova y Carbonell (2018), Billieux et al. (2015), Demetrovics et al. (2025) y Vanden Abeele (2021).`,
+pil:[
+['Panova & Carbonell, 2018','Is smartphone addiction really an addiction?','Revisa la evidencia y concluye que no alcanza para hablar de adicción. Propone el término uso problemático.'],
+['Billieux, Maurage, Lopez-Fernandez, Kuss & Griffiths, 2015','Can disordered mobile phone use be considered a behavioral addiction?','Muestra que faltan pruebas de pérdida de control, tolerancia y abstinencia. Propone un modelo de tres vías.'],
+['Brand et al., 2022','Which conditions should be considered as disorders in the ICD-11 designation of "other specified disorders due to addictive behaviors"?','Fija los criterios para llamar trastorno a una conducta: relevancia clínica, base teórica y evidencia empírica.'],
+['Demetrovics et al., 2025','Are you on the internet or using screen-based devices?','Recomienda reemplazar adicción por uso problemático y sitúa el problema en las aplicaciones, no en el aparato.']],
+ana:[
+`Este constructo es el marco del proyecto: le pone nombre al fenómeno y fija el límite de lo que se puede afirmar. La lectura conjunta de las cuatro fuentes pilares es clara. Las conductas existen y dejan consecuencias, pero no tienen ni la severidad ni el respaldo que exige la categoría clínica.`,
+`Eso no le quita peso al problema, lo reubica. Deja de ser una enfermedad de algunas personas y pasa a ser una experiencia frecuente de pérdida de control y deterioro funcional, que se mueve en un continuo. Para el diseño es una ventaja: no se interviene a pacientes, se interviene una relación cotidiana con un objeto.`,
+`La segunda consecuencia es metodológica. Si el problema depende de la aplicación, del propósito y del contexto, el tiempo en pantalla no sirve como medida. Una persona puede desbloquear mucho sin que eso sea un problema, y otra puede sentir que perdió el control con menos uso.`],
+con:[
+['Uso problemático','Uso excesivo e incontrolado que resulta en daño o deterioro funcional en la vida diaria. Se prefiere a adicción porque cubre también los casos que no llegan al umbral clínico pero igual afectan a la persona.','Mostyn Sullivan y George (2023); Demetrovics et al. (2025)'],
+['Pérdida de control','Usar más de lo planeado, no poder detenerse o fallar al intentar reducir. Es uno de los dos criterios que vuelven problemático un uso, y se entiende en grado, no como presencia o ausencia.','Vanden Abeele (2021)'],
+['Deterioro funcional','Consecuencias concretas y atribuibles al uso: tareas interrumpidas, sueño, rendimiento, relaciones. Es lo que distingue una conducta frecuente de una problemática.','Brand et al. (2022); Vanden Abeele (2021)'],
+['Heterogeneidad de uso','No existe un solo uso problemático. Síntomas parecidos pueden venir de procesos distintos: búsqueda de reafirmación, impulsividad o búsqueda de estimulación.','Billieux et al. (2015)'],
+['Aplicaciones','El objeto del uso problemático. La dependencia no es del aparato sino de las aplicaciones a las que da acceso: el teléfono es el medio que las vuelve disponibles en cualquier momento y lugar.','Demetrovics et al. (2025); Panova y Carbonell (2018)']],
+cit:[
+[`The behaviors observed in the research could be better labeled as problematic or maladaptive smartphone use and their consequences do not meet the severity levels of those caused by addiction.`,'Panova & Carbonell, 2018','','Sostiene la elección del término.'],
+[`The problems arising from smartphone use are dependent on what activities the user engages with while on the smartphone, the motivations for engaging with these activities, and the gratifications received from them which then reinforce continued use`,'Panova & Carbonell, 2018','','Une este constructo con el propósito (C4).'],
+[`PMPU is a heterogeneous and multi-faceted condition.`,'Billieux et al., 2015','p. 156','No existe una sola causa ni una sola solución.'],
+[`It is important not to over-pathologize everyday-life behavior while concurrently not trivializing conditions that are of clinical importance and that deserve public health considerations.`,'Brand et al., 2022','p. 150','El equilibrio que el proyecto debe mantener.'],
+[`problematic use relates to applications rather than the hardware itself and may extend to various devices`,'Demetrovics et al., 2025','p. 1','Define el concepto de aplicaciones como objeto del problema.'],
+[`technology use becomes excessive and problematic when individuals: (a) lose control over it, and (b) subsequently experience a significant functional impairment in their everyday lives`,'Vanden Abeele, 2021','','Los dos criterios operativos del constructo. Fuente complementaria (C4).']],
+arg:[
+['El término es uso problemático, no adicción',`Las fuentes pilares de este constructo se hacen la misma pregunta, si el uso del teléfono es una adicción, y llegan a la misma respuesta: la evidencia no alcanza. Se apoya casi solo en autorreporte, y faltan pruebas conductuales y neurobiológicas de <span class="t">pérdida de control</span>, tolerancia y abstinencia. Brand et al. fijan qué se necesita para llamar trastorno a una conducta (relevancia clínica, base teórica y evidencia empírica), y Demetrovics et al. recomiendan reemplazar adicción por <span class="t">uso problemático</span>. Lo que define ese uso no es la cantidad sino la <span class="t">pérdida de control</span> y el <span class="t">deterioro funcional</span>, los dos medidos en grado. Por eso el <span class="t">TeP</span> no sirve para distinguirlo: en Dekker et al., participantes con más de cinco horas diarias de pantalla y 86 desbloqueos al día no reportaban problemas sustanciales.`,`Panova & Carbonell (2018); Billieux et al. (2015); Brand et al. (2022); Demetrovics et al. (2025). Complementarias: Dekker et al. (2025); Vanden Abeele (2021)`],
+['No hay un solo uso problemático, y está en las aplicaciones',`La dependencia no es del aparato sino de las <span class="t">aplicaciones</span> a las que da acceso y de lo que la persona busca en ellas: actividades, propósitos y gratificaciones. Por eso la <span class="t">heterogeneidad de uso</span> es la regla: síntomas parecidos pueden venir de procesos distintos, como la búsqueda de reafirmación, la impulsividad o la búsqueda de estimulación. Una misma estrategia no sirve para todas: la desvinculación reflexiva ayuda a quien chequea por hábito y aumenta el estrés de quien lo hace por <span class="t">compulsión</span>. Diseñar para el teléfono en general supone una usuaria que no existe, y por eso el proyecto acota usuaria, contexto y propósito.`,`Demetrovics et al. (2025); Panova & Carbonell (2018); Billieux et al. (2015). Complementarias: Koban (2026); Mostyn Sullivan & George (2023)`],
+['Es inconsciente: quien lo vive no lo reconoce como problema',`Los participantes de Heitmayer y Lahlou no recordaban haber tomado el teléfono y se sorprendían al verse en video: el gesto es <span class="t">inconsciente</span>. En Dekker et al., pese a la frecuencia alta de <span class="t">desbloqueos</span>, el bienestar digital reportado no era bajo, porque la integración del teléfono a la vida diaria cambió lo que se percibe como normal. Hay dos consecuencias para el proyecto: la usuaria no va a pedir una solución para algo que no percibe como problema, y preguntarle directamente por su uso no basta para conocerlo.`,`Heitmayer & Lahlou (2021); Dekker et al. (2025). Complementarias: Koban (2026); Vanden Abeele (2021)`]],
+rel:{
+c2:['es amplificado por',`El diseño es el factor externo que empuja el uso hacia lo problemático. Flayelle et al. (2023) plantean que las características de diseño influyen en la capacidad de las personas para controlar cómo usan las aplicaciones. Chen et al. (2023) encuentran que los diseños persuasivos contribuyen al uso problemático.`],
+c3:['vuelve a gatillar',`Aquí se cierra el círculo vicioso. El arrepentimiento que deja el uso sin propósito (Guo et al., 2025) y el malestar del que se intentaba escapar son estados que funcionan como señales del hábito (Anderson & Wood, 2020), y el uso compensatorio es el propósito más ligado al uso problemático (Mostyn Sullivan & George, 2023). En la otra dirección, el hábito es la puerta de entrada: Koban (2026) aclara que no es disfuncional en sí, se vuelve problema cuando persiste aunque sus costos superen los beneficios.`],
+c4:['se explica por',`El propósito es lo que distingue un uso problemático de uno que no lo es. Panova y Carbonell (2018) piden analizar motivaciones y gratificaciones, y Mostyn Sullivan y George (2023) muestran que el uso compensatorio es el más asociado al uso problemático.`]}},
+c2:{vec:'Tecnológico',
+def:`Características de diseño de aplicaciones y plataformas que explotan vulnerabilidades psicológicas para maximizar la frecuencia y la duración del uso, debilitando el control de la persona sobre cómo y cuánto usa.`,
+defsrc:`Definición del proyecto, construida desde Monge Roffarello et al. (2023) y Flayelle et al. (2023).`,
+pil:[
+['Flayelle, Brevers, King, Maurage, Perales & Billieux, 2023','A taxonomy of technology design features that promote potentially addictive online behaviours','Clasifica las características de diseño según el mecanismo psicológico que activan. Es la base teórica del constructo.'],
+['Monge Roffarello, Lukoff & De Russis, 2023','Defining and identifying attention capture deceptive designs in digital interfaces','Define los patrones dañinos de captura de atención y entrega una tipología de 11 patrones.'],
+['Chen, Hedman, Distler & Koenig, 2023','Do persuasive designs make smartphones more addictive?','Evidencia con universitarios de 18 a 26 años: los diseños persuasivos alargan el uso y refuerzan el hábito de chequeo.'],
+['Zhang, Shang, Tian, Zhu & Zhang, 2023','The association between fear of missing out and mobile phone addiction: A meta-analysis','Cuantifica la relación entre FoMO y uso problemático. En el proyecto, el FoMO se trata como efecto dentro de este constructo.']],
+sup:['Deceptive Design, s.f.','Types of deceptive pattern','Catálogo público de 18 tipos de patrones engañosos, entre ellos Addictive Design y Nagging, con los casos legales asociados a cada uno. Sirve como material de apoyo y como puente con la discusión regulatoria, no como fuente académica: no tiene revisión por pares y conviene citarlo junto a Monge Roffarello et al. (2023), que documenta su origen.','https://deceptive.design/types/'],
+ana:[
+`Este constructo sostiene la mitad externa del problema. La captura de atención no es un accidente ni una debilidad personal: es el resultado esperado de un modelo de negocio que convierte la atención en moneda. Tres fuentes de áreas distintas coinciden en eso, y el catálogo de patrones engañosos muestra que ya es materia de regulación.`,
+`Lo más útil para el proyecto es entender cómo operan, no solo listarlos. Flayelle et al. muestran que trabajan sobre el aprendizaje: recompensas impredecibles, señales personalizadas y metas que se mueven. Monge Roffarello et al. agregan que automatizan la experiencia para que la persona no tenga que decidir. El resultado es que el mecanismo deja de estar solo en la pantalla y queda instalado como hábito.`,
+`Hay un matiz importante. Un mismo patrón puede ser útil o dañino según el contexto y el estado de la persona, y por eso los propios autores proponen pasar del nunca hagas X al ten cuidado con X. Para el proyecto esto abre una puerta: lo que vuelve pegajoso al teléfono es lo mismo que una alternativa necesita para competir con él.`],
+con:[
+['Economía de la atención','Modelo en que la atención es la moneda y la persona paga un servicio con el tiempo que le dedica. Explica por qué las plataformas optimizan frecuencia y duración de uso.','Monge Roffarello et al. (2023); Vanden Abeele (2021)'],
+['Patrones de captura de atención','Patrones recurrentes de interfaz que un diseñador usa para explotar vulnerabilidades psicológicas y capturar la atención. Son 11 en la tipología: scroll infinito, autoplay sin fin, notificaciones de recaptura, niebla temporal y otros.','Monge Roffarello et al. (2023)'],
+['Recompensa variable','Esquema de refuerzo donde no se sabe si aparecerá algo ni si valdrá la pena. La incertidumbre sostiene la tentación de chequear constantemente y es la misma lógica de las máquinas tragamonedas.','Flayelle et al. (2023); Monge Roffarello et al. (2023)'],
+['Señales de detención','Los puntos naturales donde una actividad termina y la persona puede parar a reflexionar. Los feeds sin fondo y el autoplay los eliminan, y esa eliminación es una de las claves del éxito de las plataformas.','Anderson y Wood (2020); Monge Roffarello et al. (2023)'],
+['FoMO','Miedo a perderse algo que otros están viviendo. El contenido efímero y las tendencias lo activan a propósito, y se asocia de forma alta con el uso problemático.','Zhang et al. (2023); Flayelle et al. (2023)']],
+cit:[
+[`A recurring pattern in digital interfaces that a designer uses to exploit psychological vulnerabilities and capture attention, often leading the user to lose track of their goals, lose their sense of time and control, and later feel regret.`,'Monge Roffarello et al., 2023','sec. 3.1','La definición más precisa del constructo. Nombra a la vez C1, C3 y C4.'],
+[`the specific structural characteristics and design of web-based sites and applications (technology design features) might make them habit-forming and potentially addictive`,'Flayelle et al., 2023','','Conecta el diseño con la formación del hábito.'],
+[`persuasive designs prolonged their screen time, reinforced phone-checking habits, and caused distractions`,'Chen et al., 2023','p. 1','Evidencia directa con población universitaria.'],
+[`The main effect analysis revealed a high positive correlation between fear of missing out and mobile phone addiction (r=0.47, 95%CI [0.44, 0.50]).`,'Zhang et al., 2023','p. 1','El dato que respalda al FoMO como efecto relevante.'],
+[`Developed against the background of an attention economy, mobile technology is designed to lure attention`,'Vanden Abeele, 2021','','Fuente complementaria (C4): la captura es intencional.'],
+[`This regrettable usage is no accident`,'Guo et al., 2025','','Fuente complementaria (C4): el mismo argumento desde el diseño de interacción.']],
+arg:[
+['La captura de atención es por diseño, y en universitarios contribuye al uso problemático',`En la <span class="t">economía de la atención</span>, las plataformas se diseñan para retener a la persona el mayor tiempo posible y para fabricar hábitos de chequeo que la hagan volver. No es un efecto secundario: los <span class="t">patrones de captura de atención</span> son recurrentes, están catalogados y algunos ya tienen regulación asociada. Con universitarios de 18 a 26 años, Chen et al. encontraron que el 25% reportaba múltiples conductas de uso problemático, con 5,6 horas diarias de pantalla en promedio, y que los propios entrevistados reconocían los diseños persuasivos en sus aplicaciones como causa de más <span class="t">TeP</span>, más chequeo y más distracción.`,`Monge Roffarello et al. (2023); Flayelle et al. (2023); Chen et al. (2023). Apoyo: Deceptive Design (s.f.). Complementarias: Vanden Abeele (2021); Guo et al. (2025)`],
+['Opera sobre el aprendizaje, elimina las decisiones y fabrica el FoMO',`La <span class="t">recompensa variable</span> de likes y notificaciones y las señales personalizadas activan procesos conocidos de refuerzo, que el diseño ajusta por ensayo y error a gran escala. Al mismo tiempo, quitar las <span class="t">señales de detención</span> automatiza la experiencia: nunca hay un momento para parar, y la persona deja de tener que decidir si sigue. El contenido que desaparece y las tendencias agregan un motivo para volver: el metaanálisis de 85 estudios encuentra una correlación alta entre <span class="t">FoMO</span> y uso problemático, sin diferencias significativas por edad, género ni cultura.`,`Flayelle et al. (2023); Monge Roffarello et al. (2023); Zhang et al. (2023). Complementaria: Anderson & Wood (2020)`],
+['El mecanismo ya no necesita la señal externa',`Las notificaciones gatillaron solo el 11% de las interacciones observadas, y apagarlas durante una semana no cambió ni la frecuencia de chequeo ni el <span class="t">TeP</span>. El diseño ya hizo su trabajo: el mecanismo quedó internalizado como hábito y sigue funcionando aunque la plataforma se calle.`,`Complementarias: Heitmayer & Lahlou (2021); Dekker et al. (2025)`]],
+rel:{
+c1:['amplifica',`Los mecanismos empujan hacia la pérdida de control, que es el criterio central del uso problemático. Flayelle et al. (2023) hablan de uso descontrolado y quizás adictivo, con el cuidado de no afirmar más de lo que la evidencia permite.`],
+c3:['fabrica y gatilla',`El diseño entrega las recompensas que forman el hábito y las señales que lo activan. Anderson y Wood (2020) explican que el éxito financiero de las plataformas depende de los hábitos diarios que crean. Guo et al. (2025) lo dicen de forma directa: las plataformas buscan fabricar hábitos rutinarios de chequeo.`],
+c4:['desvía y explota',`Uno de los criterios de los patrones de captura es que la persona pierde de vista sus objetivos (Monge Roffarello et al., 2023). Guo et al. (2025) lo miden: más del 60% de las veces en que el propósito era comunicarse, la actividad terminó siendo otra. Flayelle et al. (2023) advierten que si los propósitos son vulnerabilidades, el diseño puede volverse explotador.`]}},
+c3:{vec:'Humano',
+def:`Conducta aprendida de iniciar una sesión en el teléfono, que se activa de forma automática ante señales del contexto, con poca conciencia y con poca participación de la intención. La unidad observable es el desbloqueo.`,
+defsrc:`Definición del proyecto, construida desde Anderson y Wood (2020), Koban (2026) y Dekker et al. (2025).`,
+pil:[
+['Anderson & Wood, 2020','Habits and the electronic herd: The psychology behind social media’s successes and failures','Explica cómo se forma un hábito, qué señales lo activan y por qué persiste aunque la persona quiera dejarlo.'],
+['Heitmayer & Lahlou, 2021','Why are smartphones disruptive? An empirical study of smartphone use in real-life contexts','Observación en video en primera persona: el 89% de las interacciones las inicia el usuario. La interrupción es interna.'],
+['Koban, 2026','When digital connectivity drivers meet digital disconnection','Distingue chequeo habitual de chequeo compulsivo y muestra que las estrategias de desconexión funcionan distinto en cada caso.'],
+['Dekker, Baumgartner, Sumter & Ohme, 2025','Beyond the buzz','Ensayo controlado con datos objetivos: apagar notificaciones no reduce el chequeo. El hábito resiste.']],
+ana:[
+`Este constructo es el centro del proyecto, porque es donde se quiere intervenir. Las fuentes cambian la pregunta habitual. El problema no es que el teléfono interrumpa a la persona: es que la persona se interrumpe sola, cada pocos minutos, sin notarlo y sin estar contenta cuando lo descubre.`,
+`El hábito no es un defecto. Es un mecanismo eficiente de la mente que ahorra esfuerzo. Por eso mismo no responde a la intención ni a la información: una vez formado, se dispara con la señal y sigue aunque la recompensa baje. Eso explica por qué fallan las soluciones que apelan a la voluntad o que quitan un estímulo externo.`,
+`Lo que sí funciona según la literatura es actuar sobre el contexto: agregar fricción, cambiar las señales y construir un hábito que reemplace al anterior. Esa es la base teórica de desentrenar. La advertencia de Koban es que esto aplica al chequeo habitual; para la compulsión, cortar el acceso puede aumentar el estrés y provocar una recaída compensatoria.`],
+con:[
+['Automaticidad','La señal activa la respuesta directamente, sin pasar por la intención. Es lo que vuelve eficiente al hábito y lo que hace que siga funcionando aunque la persona quiera otra cosa.','Anderson y Wood (2020)'],
+['Inconsciente','El gesto ocurre sin auto-observación: la persona no decide tomar el teléfono ni recuerda haberlo hecho. El hábito es una reducción aprendida de la auto-observación intencional, y los participantes no reconocían sus propios usos hasta verse en video.','Koban (2026); Heitmayer y Lahlou (2021)'],
+['Señales de contexto','Elementos asociados a usos pasados recompensados que al aparecer traen a la mente la conducta: el teléfono a la vista, un lugar, una actividad, y también estados internos como el aburrimiento o el estrés.','Anderson y Wood (2020)'],
+['Interrupción interna','La interrupción no viene del aparato sino de la persona, que deja lo que está haciendo para tomar el teléfono sin que nada externo la llame. Heitmayer y Lahlou la comparan con toser en medio de una conversación.','Heitmayer y Lahlou (2021)'],
+['Compulsión','Incapacidad de detener la conducta, independiente de que haya una intención detrás. Se distingue del hábito: el hábito es menos auto-observación frente a una señal, la compulsión es no poder parar.','Koban (2026)'],
+['Fricción','Demoras, pasos y barreras para llegar al contenido. Las plataformas la eliminan para facilitar la repetición, y volver a introducirla devuelve conciencia e intención a la acción. Es la puerta de entrada del diseño.','Anderson y Wood (2020); Koban (2026)']],
+cit:[
+[`Habits are cognitive associations that people learn as they repeat rewarded responses`,'Anderson & Wood, 2020','p. 1','Definición base de hábito.'],
+[`Phone checking is defined as the initiation of a phone session, which consists of unlocking the phone, followed by a series of phone activities, until the phone is locked again.`,'Dekker et al., 2025','p. 173','Define el desbloqueo como unidad.'],
+[`89% of smartphone interactions are initiated by users, not by notifications`,'Heitmayer & Lahlou, 2021','p. 1','El dato más fuerte del constructo.'],
+[`while habits represent a learned reduction of intentionally exercised self-observation and schema-activation self-control, compulsion refers to an inability to stop a certain behavior from being executed`,'Koban, 2026','','Distingue hábito de compulsión.'],
+[`smartphone behavior has become a highly habitualized behavior that is resistant to change`,'Dekker et al., 2025','p. 178','Por qué las soluciones simples no alcanzan.'],
+[`contextual discontinuity has often been regarded as highly promising for behavioral change because it introduces friction to an otherwise purposely frictionless experience, leading to more mindful and intentional actions`,'Koban, 2026','','Fundamento teórico de la fricción y de desentrenar.']],
+arg:[
+['La interrupción es interna y no responde a la intención',`Solo cerca del 11% de las interacciones observadas partió de una notificación percibida, y uno de cada seis usos fue una mirada de unos cinco segundos a la pantalla bloqueada. La <span class="t">interrupción interna</span> es la regla: las personas creen que el teléfono las interrumpe, pero se interrumpen solas, con el aparato en silencio. Es la otra cara de que el mecanismo ya no necesite la señal externa (C2): una vez formado el hábito, la <span class="t">automaticidad</span> reemplaza a la intención, y a mayor fuerza del hábito menos predice la intención lo que la persona hace. Por eso aparece la dependencia como experiencia cotidiana: la usuaria sigue desbloqueando aunque quiera reducir su uso.`,`Heitmayer & Lahlou (2021); Anderson & Wood (2020); Koban (2026). Complementaria: Dekker et al. (2025)`],
+['Los estados emocionales funcionan como señales',`El aburrimiento fue el mayor predictor de uso del teléfono en un estudio citado por Anderson y Wood, y el estrés, la ansiedad y no saber cómo resolver una tarea también operan como <span class="t">señales de contexto</span>, sobre todo en las personas más habituales. Aquí el hábito se engancha con el círculo vicioso: el malestar no solo empuja a buscar alivio en el teléfono (<span class="t">uso compensatorio</span>, C4), también activa el gesto sin que medie una decisión.`,`Anderson & Wood (2020). Complementarias: Mostyn Sullivan & George (2023); Guo et al. (2025)`],
+['El contexto no cambia la frecuencia, y el cambio no pasa por la voluntad',`El lugar, la actividad y estar acompañada cambian cuánto dura cada uso, pero no cada cuánto se toma el teléfono: los intervalos se mantienen estables, con un <span class="t">desbloqueo</span> cada cinco minutos aproximadamente. El gesto viaja con la persona, y por eso tampoco basta con quitar un estímulo: una semana sin notificaciones no cambió la frecuencia de desbloqueo ni el <span class="t">TeP</span>, y apoyarse en la fuerza de voluntad es exigente y poco sostenible. Lo que tiene respaldo es actuar dentro del gesto: introducir <span class="t">fricción</span>, romper la continuidad del contexto y construir un hábito que reemplace al anterior. Es la base de desentrenar, con la advertencia de que ayuda al chequeo habitual y puede perjudicar a la <span class="t">compulsión</span>.`,`Heitmayer & Lahlou (2021); Dekker et al. (2025); Koban (2026). Complementaria: Flayelle et al. (2023)`,
+`Tienes observación documentada propia en cine, teatro y reuniones familiares y sociales: contextos donde revisar el teléfono no está bien visto y donde igual ocurre. Formalizada como antecedente, sería evidencia local de que el contexto no detiene la frecuencia.`]],
+rel:{
+c1:['puede derivar en',`El hábito no es el problema por sí mismo. Anderson y Wood (2020) aclaran que el uso habitual no es necesariamente problemático, y Koban (2026) que no es inherentemente disfuncional. Es la puerta de entrada: se vuelve problema cuando interrumpe tareas, cuando va contra las metas de la persona o cuando pasa a ser compulsivo.`],
+c2:['es fabricado por',`El hábito se forma con las recompensas inmediatas e impredecibles del diseño y se activa con sus señales. Chen et al. (2023) muestran que las propias usuarias perciben que los diseños persuasivos refuerzan su hábito de chequeo.`],
+c4:['desplaza a',`A mayor fuerza del hábito, menos predice la intención lo que la persona hace (Anderson & Wood, 2020). Por eso el uso auto-iniciado tiende a buscar distracción, mientras que el que responde a una notificación tiene un propósito más claro y dura menos (Heitmayer & Lahlou, 2021).`]}},
+c4:{vec:'Humano',
+def:`El propósito con que se desbloquea y se usa el teléfono, y el grado en que lo que efectivamente se hace coincide con ese propósito. Un uso es intencional cuando parte de un objetivo y se mantiene en él.`,
+defsrc:`Definición del proyecto, construida desde Mostyn Sullivan y George (2023), Guo et al. (2025) y Vanden Abeele (2021).`,
+pil:[
+['Guo, Fu, Lin, Xu, Chang & Hiniker, 2025','What social media use do people regret? An analysis of 34K smartphone screenshots with multimodal LLM','Mide el propósito al abrir cada app y el arrepentimiento posterior. El uso no intencional es el que más se lamenta.'],
+['Mostyn Sullivan & George, 2023','The association of motives with problematic smartphone use: A systematic review','Revisa 44 estudios y ordena los propósitos de uso en siete categorías. Identifica cuáles se asocian al uso problemático.'],
+['Vanden Abeele, 2021','Digital wellbeing as a dynamic construct','Define el bienestar digital como equilibrio entre conexión y desconexión, dependiente de persona, dispositivo y contexto.']],
+ana:[
+`Este constructo es el criterio de evaluación del proyecto. Permite decir cuándo un uso está bien y cuándo no sin contar minutos. El mismo acto de abrir Instagram deja una sensación distinta si se hizo para hablar con alguien o si se hizo sin saber por qué.`,
+`Las fuentes muestran dos formas de falla. La primera es entrar sin propósito, por hábito o para evitar algo. La segunda es entrar con propósito y perderlo en el camino, porque la interfaz mezcla lo que se buscaba con contenido recomendado. Las dos terminan en arrepentimiento, que es la señal subjetiva de que el uso no tuvo sentido.`,
+`Aquí aparece la pista más concreta para el diseño. Si detrás del desbloqueo sin propósito hay una necesidad real, como aliviar una emoción o pasar el rato, la alternativa no puede solo bloquear el gesto: tiene que ofrecer otra forma de responder a esa necesidad.`],
+con:[
+['Propósito','La razón por la que se desbloquea: la necesidad o el deseo que se busca satisfacer. Se ordenan en siete categorías: social, identidad y conformidad, información, regulación del ánimo, pasar el tiempo, disfrute y seguridad.','Mostyn Sullivan y George (2023)'],
+['Uso no intencional','Tomar el teléfono sin un objetivo específico. Se caracteriza por la falta de propósito y por conducta habitual o refleja, y es el uso más difícil de justificar después.','Guo et al. (2025)'],
+['Desviación','La distancia entre lo que se iba a hacer y lo que se terminó haciendo. Comportarse distinto de lo que se pretendía amplifica el arrepentimiento, porque evidencia un mal proceso de decisión.','Guo et al. (2025)'],
+['Arrepentimiento','Emoción cognitiva de auto-reproche que aparece al comparar la situación actual con la que habría resultado de decidir distinto. Es el indicador subjetivo de que el uso no tuvo sentido.','Guo et al. (2025)'],
+['Uso compensatorio','Usar el teléfono para aliviar una emoción negativa o escapar de una circunstancia. La teoría del uso compensatorio enmarca el uso problemático como un intento de evitar emociones o situaciones desagradables.','Mostyn Sullivan y George (2023), citando a Kardefelt-Winther (2014)'],
+['Bienestar digital','Equilibrio entre los beneficios y los costos de estar conectada: máximo placer controlado y apoyo funcional, con el mínimo de pérdida de control y deterioro funcional. Depende de la persona, el dispositivo y el contexto, y cambia en el tiempo.','Vanden Abeele (2021)']],
+cit:[
+[`regret varies based on user intention, with non-intentional and social media use being especially regrettable`,'Guo et al., 2025','p. 1','Hallazgo central del constructo.'],
+[`[Instagram] is one of the apps that I just open as a habit for no reason. And I don’t even know why.`,'participante citada en Guo et al., 2025','','La voz de usuario que une propósito y hábito.'],
+[`Motives have been defined as the reasons why a person engages in a behaviour, reflecting the needs and desires they seek to gratify`,'Mostyn Sullivan & George, 2023','','Define el concepto de propósito.'],
+[`Motives which reflected smartphone use for mood regulation, enhancement, self-identity/conformity, passing time, socialising, and safety were generally positively associated with PSU.`,'Mostyn Sullivan & George, 2023','p. 1','Qué propósitos se asocian al uso problemático.'],
+[`People achieve digital wellbeing when experiencing maximal controlled pleasure and functional support, together with minimal loss of control and functional impairment.`,'Vanden Abeele, 2021','','El objetivo no es usar menos, es usar en equilibrio.'],
+[`discovering which motives underlie PSU may inform the development of interventions which identify alternate means of satisfying those motives`,'Mostyn Sullivan & George, 2023','','Respaldo directo para diseñar una alternativa.']],
+arg:[
+['Sin propósito o con el propósito perdido: las dos formas del arrepentimiento',`El <span class="t">arrepentimiento</span> fue significativamente mayor cuando la persona abrió una app sin objetivo que con cualquier otro propósito, y menor al comunicarse o al hacer algo productivo. Ese <span class="t">uso no intencional</span> se caracteriza por conducta habitual o refleja: las participantes lo describen como abrir por costumbre, sin saber por qué. La segunda forma es entrar con propósito y perderlo: en las sesiones que partieron para comunicarse, solo el 37,3% de las capturas correspondió a comunicación. La <span class="t">desviación</span> no es un descuido de la usuaria, es el resultado de interfaces que mezclan lo que se buscaba con lo que retiene.`,`Guo et al. (2025). Complementarias: Anderson & Wood (2020); Monge Roffarello et al. (2023)`],
+['La meta es el equilibrio, y pasa por ofrecer otra vía',`Restringir el <span class="t">TeP</span> sacrifica también lo positivo, y las intervenciones de abstinencia suelen ser inefectivas. El <span class="t">bienestar digital</span> es un equilibrio, no una reducción: el proyecto no busca que la usuaria use menos el teléfono, busca que lo use cuando quiere usarlo. Para eso hay que mirar el <span class="t">propósito</span>: si se sabe qué necesidad busca satisfacer la usuaria, se puede diseñar otro medio para satisfacerla. Es la respuesta directa al primer argumento y el puente entre la investigación y el objeto.`,`Vanden Abeele (2021); Mostyn Sullivan & George (2023). Complementarias: Guo et al. (2025); Dekker et al. (2025)`],
+['El uso compensatorio es el propósito más ligado al uso problemático',`Los 16 estudios que midieron regulación del ánimo encontraron asociación positiva con uso problemático, y 10 de 11 en el caso de pasar el tiempo; buscar información casi no se asocia. El <span class="t">uso compensatorio</span> es la bisagra del círculo vicioso: se usa el teléfono para escapar del malestar y el uso sin sentido deja más malestar. En una usuaria que estudia sola, la frustración con la tarea es exactamente ese malestar, y la revisión de Mostyn Sullivan y George reporta que la mayoría de los estudios encuentra más uso problemático en mujeres.`,`Mostyn Sullivan & George (2023). Complementarias: Billieux et al. (2015); Flayelle et al. (2023); Anderson & Wood (2020)`]],
+rel:{
+c1:['explica a',`El propósito es la vía final hacia la conducta. Explica por qué dos personas con el mismo nivel de uso tienen experiencias distintas, que es lo que Panova y Carbonell (2018) pedían estudiar. La pérdida de control y el arrepentimiento son la cara subjetiva del uso problemático.`],
+c2:['es desviada por',`El diseño mezcla funciones para que la persona derive desde lo que buscaba hacia contenido recomendado (Guo et al., 2025). Los patrones de captura se definen justamente por hacer perder de vista los objetivos y dejar arrepentimiento (Monge Roffarello et al., 2023).`],
+c3:['es desplazada por',`Cuando el hábito es fuerte, la intención deja de guiar la conducta (Anderson & Wood, 2020). A la inversa, cuando se interrumpe la automaticidad el uso se percibe más intencional: es lo que ocurrió al apagar las notificaciones en Dekker et al. (2025).`]}}
+};
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+function wrap(s,n){const w=s.split(' ');const L=[];let c='';w.forEach(x=>{if((c+' '+x).trim().length>n&&c){L.push(c);c=x}else c=(c+' '+x).trim()});if(c)L.push(c);return L}
+function pill(x,y,label,fill,stroke,tc,n,bold){const L=wrap(label,n||18);const w=Math.max(...L.map(l=>l.length))*7+26,h=L.length*16+14;
+return {w,h,svg:`<rect x="${x-w/2}" y="${y-h/2}" width="${w}" height="${h}" rx="${Math.min(h/2,16)}" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`+L.map((l,i)=>`<text x="${x}" y="${y-(L.length-1)*8+i*16+4.5}" text-anchor="middle" font-size="13" font-weight="${bold?700:400}" fill="${tc}">${esc(l)}</text>`).join('')}}
+
+function renderC(id){const d=C[id];const n=id.slice(1);
+const others=['c1','c2','c3','c4'].filter(k=>k!==id);
+const pos=[[150,62],[570,62],[360,250]];
+let mini=`<svg viewBox="0 0 720 300" role="img" aria-label="Relaciones de ${NAMES[id]} con los otros constructos">`;
+others.forEach((o,i)=>{const [x,y]=pos[i];mini+=`<line x1="360" y1="150" x2="${x}" y2="${y}" stroke="#5d7b96" stroke-width="2"/>`;
+const mx=(360+x)/2,my=(150+y)/2;const lab=pill(mx,my,d.rel[o][0],'#fff','#d2dae2','#3f5e78',22);mini+=lab.svg});
+mini+=pill(360,150,'C'+n+' '+NAMES[id],'#2b4052','#2b4052','#fff',20,true).svg;
+others.forEach((o,i)=>{const [x,y]=pos[i];mini+=`<a href="#${o}" class="node">`+pill(x,y,o.toUpperCase()+' '+NAMES[o],'#f6eaf2','#7d075c','#2b4052',20,true).svg+`</a>`});
+mini+='</svg>';
+document.getElementById('v-c').innerHTML=`
+<p class="label">Constructo ${n} · Vector ${d.vec}</p>
+<h1>${NAMES[id]}</h1>
+<p class="meta">ACTUALIZADO 2026-11-18</p>
+<div class="band"><p class="label">Definición</p><p class="def">${d.def}</p><p class="meta">${d.defsrc}</p></div>
+<h2>Conceptos clave</h2>
+<p class="meta">Toca un concepto para ver su definición, de dónde viene y en qué argumentos se usa.</p>
+<div class="cbub" id="cbub">${d.con.map((c,i)=>`<button class="cb" data-i="${i}" aria-expanded="false" aria-controls="cpanel">${c[0]}</button>`).join('')}</div>
+<div class="cpanel" id="cpanel" aria-live="polite"></div>
+<h2>Análisis e interpretación</h2>
+${d.ana.map(p=>`<p>${p}</p>`).join('')}
+<h2>Argumentos clave</h2>
+<ol class="args">${d.arg.map(a=>`<li><h4>${a[0]}</h4><p>${a[1]}</p><p class="src">${esc(a[2])}</p>${a[3]?`<p class="own"><b>Aporte tuyo:</b> ${a[3]}</p>`:''}</li>`).join('')}</ol>
+<h2>Citas clave</h2>
+<div class="grid">${d.cit.map(c=>`<div class="q"><blockquote lang="en">&ldquo;${esc(c[0])}&rdquo; (${esc(c[1])}, ${c[2]||PV}).</blockquote><div class="why">${c[3]}</div></div>`).join('')}</div>
+<h2>Relación con los demás constructos</h2>
+<div class="mini">${mini}</div>
+<div class="grid g3">${others.map(o=>`<div class="card"><p class="label">${o.toUpperCase()} ${NAMES[o]}</p><h4>${NAMES[id]} ${d.rel[o][0]} ${NAMES[o].toLowerCase()}</h4><p>${d.rel[o][1]}</p><a class="meta" href="#${o}">Ir a ${o.toUpperCase()}</a></div>`).join('')}</div>
+<h2>Fuentes</h2>
+<div class="grid g2">${d.pil.map(p=>`<div class="card"><div class="meta">${esc(p[0])}</div><h4>${esc(p[1])}</h4><p>${p[2]}</p><div class="row"><span class="chip pl">Pilar</span></div></div>`).join('')}
+${d.sup?`<div class="card"><div class="meta">${esc(d.sup[0])}</div><h4>${esc(d.sup[1])}</h4><p>${d.sup[2]}</p><div class="row"><span class="chip">Apoyo</span><a class="meta" href="${d.sup[3]}" target="_blank" rel="noopener">${d.sup[3]}</a></div></div>`:''}</div>
+<p class="meta" style="margin-top:12px">Las fuentes complementarias aparecen identificadas dentro de los argumentos y las citas.</p>`;
+const cb=document.getElementById('cbub'),cp=document.getElementById('cpanel');
+cb.addEventListener('click',e=>{const b=e.target.closest('.cb');if(!b)return;const open=b.getAttribute('aria-expanded')==='true';
+cb.querySelectorAll('.cb').forEach(x=>x.setAttribute('aria-expanded','false'));
+if(open){cp.innerHTML='';return}
+b.setAttribute('aria-expanded','true');const c=d.con[+b.dataset.i];const key=c[0].toLowerCase();
+const used=d.arg.map((a,i)=>a[1].toLowerCase().includes(key)?i+1:0).filter(Boolean);
+cp.innerHTML=`<div class="card sel"><h3>${c[0]}</h3><p>${c[1]}</p><p class="meta">Fuente: ${esc(c[2])}</p>${used.length?`<p class="meta">Se usa en ${used.length>1?'los argumentos':'el argumento'} ${used.join(', ')}</p>`:''}</div>`});
+}
+
+/* ---------- Mapa general ---------- */
+const N=[
+{id:'c1',t:'c',l:'C1 Uso problemático',d:'Pérdida de control y deterioro funcional en la vida diaria, sin alcanzar la severidad de una adicción. Es el marco del proyecto.'},
+{id:'c2',t:'c',l:'C2 Mecanismos adictivos',d:'Características de diseño que explotan vulnerabilidades psicológicas para maximizar frecuencia y duración de uso.'},
+{id:'c3',t:'c',l:'C3 Hábito de chequeo',d:'Gesto aprendido y automático de iniciar una sesión en el teléfono ante señales del contexto.'},
+{id:'c4',t:'c',l:'C4 Intencionalidad de uso',d:'Propósito con que se desbloquea y grado en que lo que se hace coincide con ese propósito.'},
+{id:'k11',t:'k',g:'c1',l:'Uso problemático',d:'Uso excesivo e incontrolado que resulta en daño o deterioro funcional. Cubre los casos que no llegan al umbral clínico.'},
+{id:'k12',t:'k',g:'c1',l:'Pérdida de control',d:'Usar más de lo planeado o no poder parar. Uno de los dos criterios, medido en grado.'},
+{id:'k13',t:'k',g:'c1',l:'Deterioro funcional',d:'Consecuencias concretas y atribuibles al uso: tareas, sueño, rendimiento, relaciones.'},
+{id:'k15',t:'k',g:'c1',l:'Heterogeneidad de uso',d:'Síntomas parecidos vienen de procesos distintos: reafirmación, impulsividad, búsqueda de estimulación.'},
+{id:'k16',t:'k',g:'c1',l:'Aplicaciones',d:'El objeto real del uso problemático. La dependencia es de las aplicaciones, no del aparato que da acceso a ellas.'},
+{id:'k21',t:'k',g:'c2',l:'Economía de la atención',d:'La atención es la moneda: la persona paga el servicio con su tiempo.'},
+{id:'k22',t:'k',g:'c2',l:'Patrones de captura',d:'Los 11 patrones de Monge Roffarello et al.: scroll infinito, autoplay sin fin, notificaciones de recaptura, niebla temporal.'},
+{id:'k23',t:'k',g:'c2',l:'Recompensa variable',d:'No saber si aparecerá algo ni si valdrá la pena. La misma lógica de las tragamonedas.'},
+{id:'k24',t:'k',g:'c2',l:'Señales de detención',d:'Los puntos naturales para parar. Los feeds sin fondo y el autoplay los eliminan.'},
+{id:'k25',t:'k',g:'c2',l:'FoMO',d:'Miedo a perderse algo, activado a propósito por el contenido efímero. Correlación alta con uso problemático (r = 0,47).'},
+{id:'k32',t:'k',g:'c3',l:'Automaticidad',d:'La señal activa la respuesta directamente, sin pasar por la intención.'},
+{id:'k37',t:'k',g:'c3',l:'Inconsciente',d:'El gesto ocurre sin auto-observación: no se decide ni se recuerda. Los participantes no reconocían sus usos hasta verse en video.'},
+{id:'k33',t:'k',g:'c3',l:'Señales de contexto',d:'Teléfono a la vista, lugares, actividades y estados internos como aburrimiento o estrés.'},
+{id:'k34',t:'k',g:'c3',l:'Interrupción interna',d:'La persona deja lo que hace para tomar el teléfono sin que nada externo la llame.'},
+{id:'k35',t:'k',g:'c3',l:'Compulsión',d:'No poder detener la conducta. Se distingue del hábito y requiere otra respuesta.'},
+{id:'k36',t:'k',g:'c3',l:'Fricción',d:'Demoras y barreras. Quitarlas facilita el hábito; agregarlas devuelve conciencia e intención.'},
+{id:'k41',t:'k',g:'c4',l:'Propósito',d:'La necesidad o deseo que se busca satisfacer al desbloquear. Siete categorías.'},
+{id:'k42',t:'k',g:'c4',l:'Uso no intencional',d:'Tomar el teléfono sin objetivo específico. El más lamentado y el más habitual.'},
+{id:'k43',t:'k',g:'c4',l:'Desviación',d:'La distancia entre lo que se iba a hacer y lo que se terminó haciendo.'},
+{id:'k44',t:'k',g:'c4',l:'Arrepentimiento',d:'Auto-reproche al comparar lo que se hizo con lo que se pudo hacer. Indicador subjetivo.'},
+{id:'k45',t:'k',g:'c4',l:'Uso compensatorio',d:'Usar el teléfono para aliviar una emoción negativa o escapar de una circunstancia.'},
+{id:'k46',t:'k',g:'c4',l:'Bienestar digital',d:'Equilibrio entre beneficios y costos de estar conectada. La meta no es usar menos, es usar cuando se quiere.'},
+{id:'a1',t:'a',g:'c1',l:'Panova & Carbonell (2018)',d:'No hay sustento suficiente para hablar de adicción. Proponen uso problemático y estudiar motivos y gratificaciones.'},
+{id:'a2',t:'a',g:'c1',l:'Billieux et al. (2015)',d:'Evidencia escasa para el modelo de adicción. Modelo de tres vías.'},
+{id:'a3',t:'a',g:'c1',l:'Brand et al. (2022)',d:'Criterios para considerar trastorno una conducta: relevancia clínica, teoría y evidencia.'},
+{id:'a4',t:'a',g:'c1',l:'Demetrovics et al. (2025)',d:'Uso problemático en vez de adicción. El problema se relaciona con las aplicaciones, no con el hardware.'},
+{id:'a5',t:'a',g:'c2',l:'Flayelle et al. (2023)',d:'Taxonomía de características de diseño según el mecanismo psicológico que activan.'},
+{id:'a6',t:'a',g:'c2',l:'Monge Roffarello et al. (2023)',d:'Definición y tipología de 11 patrones dañinos de captura de atención.'},
+{id:'a7',t:'a',g:'c2',l:'Chen et al. (2023)',d:'Con universitarios: los diseños persuasivos alargan el uso y refuerzan el chequeo.'},
+{id:'a8',t:'a',g:'c2',l:'Zhang et al. (2023)',d:'Metaanálisis de 85 estudios sobre FoMO y uso problemático del teléfono.'},
+{id:'a16',t:'a',g:'c2',l:'Deceptive Design (s.f.)',d:'Catálogo público de 18 tipos de patrones engañosos, con Addictive Design y Nagging entre ellos. Fuente de apoyo, sin revisión por pares.'},
+{id:'a9',t:'a',g:'c3',l:'Anderson & Wood (2020)',d:'Psicología del hábito aplicada a redes sociales: recompensas, señales, fricción y persistencia.'},
+{id:'a10',t:'a',g:'c3',l:'Heitmayer & Lahlou (2021)',d:'Video en primera persona: la interrupción es interna y habitual.'},
+{id:'a11',t:'a',g:'c3',l:'Koban (2026)',d:'Chequeo habitual frente a compulsivo y efecto de las estrategias de desconexión.'},
+{id:'a12',t:'a',g:'c3',l:'Dekker et al. (2025)',d:'Apagar notificaciones no cambia el chequeo ni el tiempo en pantalla.'},
+{id:'a13',t:'a',g:'c4',l:'Guo et al. (2025)',d:'Propósito al abrir cada app y arrepentimiento posterior, con 34 mil capturas.'},
+{id:'a14',t:'a',g:'c4',l:'Mostyn Sullivan & George (2023)',d:'Revisión sistemática de propósitos de uso y su asociación con uso problemático.'},
+{id:'a15',t:'a',g:'c4',l:'Vanden Abeele (2021)',d:'Bienestar digital como equilibrio dinámico entre persona, dispositivo y contexto.'},
+{id:'g1',t:'g',l:'Tiempo en pantalla (TeP)',d:'Concepto general. Minutos de pantalla al día: mide la duración, no la frecuencia ni el sentido. Es lo que las plataformas optimizan y lo que no define el uso problemático.'},
+{id:'g2',t:'g',l:'Desbloqueo',d:'Concepto general y unidad de observación del proyecto. Iniciar una sesión: desbloquear, usar, bloquear. Mide la frecuencia del gesto, que el contexto no cambia.'},
+{id:'u',t:'u',l:'Usuaria: mujeres de 20 a 24, universitarias',d:'Quien vive el círculo vicioso. La mayoría de los estudios reporta más uso problemático en mujeres, y en un estudio citado por Mostyn Sullivan y George (2023) el uso compensatorio fue el predictor más fuerte en ellas.'},
+{id:'x',t:'u',l:'Contexto: estudio individual con el teléfono a la vista',d:'Donde ocurre. Contiene el círculo completo: la tarea difícil genera malestar, el malestar gatilla el chequeo y el chequeo deja culpa y trabajo atrasado. La sola visibilidad del teléfono basta para activar un estado de vigilancia (Vanden Abeele, 2021).'},
+{id:'v',t:'v',l:'El vacío',d:''}
+];
+const MAIN=[['c2','c3','fabrica y gatilla'],['c3','c4','desplaza'],['c4','c1','deriva en'],['c1','c3','deja malestar que gatilla'],['c2','c1','amplifica'],['c2','c4','desvía']];
+const E=[
+['k11','a1'],['k11','a4'],['k11','a14'],['k12','a15'],['k12','a2'],['k13','a3'],['k13','a15'],['k15','a2'],['k15','a11'],['k16','a4'],['k16','a1'],
+['k21','a6'],['k21','a15'],['k22','a6'],['k22','a16'],['k23','a5'],['k23','a6'],['k24','a9'],['k24','a6'],['k25','a8'],['k25','a5'],['k25','a12'],
+['k32','a9'],['k32','a10'],['k37','a11'],['k37','a10'],['k33','a9'],['k33','a15'],['k34','a10'],['k35','a11'],['k36','a11'],['k36','a9'],
+['k41','a14'],['k41','a1'],['k42','a13'],['k42','a9'],['k43','a13'],['k43','a6'],['k44','a13'],['k44','a6'],['k45','a14'],['k45','a2'],['k46','a15'],
+['a7','c3'],['a7','c2'],['a5','c3'],['a13','c3'],['a12','c4'],['a14','c1'],['a11','c1'],['a9','c2'],['a16','c2'],
+['g1','c1'],['g1','c2'],['g1','a12'],['g1','a15'],['g2','c3'],['g2','c4'],['g2','a12'],['g2','a10'],
+['u','x','estudia sola en'],['u','k45'],['u','k41'],['u','k25'],['u','k15'],['u','a14'],['u','a7'],
+['x','k33'],['x','k36'],['x','k34'],['x','g2'],['x','a10'],['x','a9'],['x','a15'],
+['v','k36'],['v','k41'],['v','k45'],['v','k42'],['v','g2'],['v','a12'],['v','a11'],['v','a5'],['v','a14'],['v','u'],['v','x']
+];
+const GEN=['g1','g2','tiempo frente a gesto'];
+const P={c2:[470,345],c3:[1030,345],c4:[1030,705],c1:[470,705]};
+const OUT={c2:225,c3:315,c4:45,c1:135};
+const STY={c:['#2b4052','#2b4052','#fff'],k:['#d2dae2','#d2dae2','#2b4052'],a:['#fff','#5d7b96','#2b4052'],g:['#fff','#2b4052','#2b4052'],u:['#f6eaf2','#7d075c','#2b4052'],v:['#7d075c','#7d075c','#fff']};
+const byId={};N.forEach(n=>byId[n.id]=n);
+function layout(){
+N.forEach(n=>{if(n.t==='c'){n.x=P[n.id][0];n.y=P[n.id][1];n.fix=1}});
+['c1','c2','c3','c4'].forEach(g=>{
+const ks=N.filter(n=>n.g===g&&n.t==='k'),as=N.filter(n=>n.g===g&&n.t==='a');
+const place=(arr,r,span)=>arr.forEach((n,i)=>{const a=(OUT[g]-span/2+span*(arr.length>1?i/(arr.length-1):.5))*Math.PI/180;n.x=P[g][0]+r*Math.cos(a);n.y=P[g][1]+r*Math.sin(a)});
+place(ks,190,175);place(as,320,125);});
+const FX={g1:[600,525],g2:[900,525],v:[750,525],u:[750,105],x:[750,940]};Object.keys(FX).forEach(k=>{byId[k].x=FX[k][0];byId[k].y=FX[k][1];byId[k].fix=1});
+N.forEach(n=>{const big=n.t==='c'||n.t==='v';const L=wrap(n.l,big?14:(n.t==='u'?26:18));n.L=L;n.w=Math.max(...L.map(l=>l.length))*(big?8.6:7)+(n.t==='v'?64:28);n.h=L.length*(big?19:16)+(n.t==='v'?40:(big?22:14))});
+for(let it=0;it<500;it++){let moved=0;for(let i=0;i<N.length;i++)for(let j=i+1;j<N.length;j++){const a=N[i],b=N[j];
+const ox=(a.w+b.w)/2+10-Math.abs(a.x-b.x),oy=(a.h+b.h)/2+8-Math.abs(a.y-b.y);
+if(ox>0&&oy>0){moved=1;const fa=a.fix?0:(b.fix?1:.5),fb=b.fix?0:(a.fix?1:.5);
+if(oy<ox){const s=a.y<=b.y?-1:1;a.y+=s*oy*fa;b.y-=s*oy*fb}else{const s=a.x<=b.x?-1:1;a.x+=s*ox*fa;b.x-=s*ox*fb}}}
+N.forEach(n=>{if(!n.fix){n.x=Math.max(n.w/2+6,Math.min(1500-n.w/2-6,n.x));n.y=Math.max(n.h/2+6,Math.min(1040-n.h/2-6,n.y))}});if(!moved)break}
+}
+function nodeSvg(n){const s=STY[n.t];const big=n.t==='c'||n.t==='v';const lh=big?19:16,fs=n.t==='v'?20:(big?16:13);
+return `<g class="node" data-id="${n.id}" tabindex="0" role="button" aria-label="${esc(n.l)}"><rect x="${n.x-n.w/2}" y="${n.y-n.h/2}" width="${n.w}" height="${n.h}" rx="${big?(n.t==='v'?999:20):Math.min(n.h/2,16)}" fill="${s[0]}" stroke="${s[1]}" stroke-width="${n.t==='g'||n.t==='u'?2:1.5}"/>`+
+n.L.map((l,i)=>`<text x="${n.x}" y="${n.y-(n.L.length-1)*lh/2+i*lh+fs*.36}" text-anchor="middle" font-size="${fs}" font-weight="${n.t==='a'?400:700}" fill="${s[2]}">${esc(l)}</text>`).join('')+`</g>`}
+let sel=null;const hide={k:false,a:false,u:false};
+function neigh(id){const s=new Set([id]);E.concat(MAIN,[GEN]).forEach(e=>{if(e[0]===id)s.add(e[1]);if(e[1]===id)s.add(e[0])});
+N.forEach(n=>{if(n.g===id)s.add(n.id);if(n.id===id&&n.g)s.add(n.g)});return s}
+function drawMap(){const vis=n=>!hide[n.t]||n.t==='c';const ns=sel?neigh(sel):null;let h='<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#2b4052"/></marker></defs>';
+const st=(a,b)=>{const on=sel&&(sel===a.id||sel===b.id);return (on?'hi':'')+(sel&&!on?' dim':'')};
+const line=(a,b,cls)=>`<line class="edge ${cls}" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"/>`;
+const tag=(x,y,txt,col)=>{const w=txt.length*6.6+18;return `<rect x="${x-w/2}" y="${y-11}" width="${w}" height="22" rx="11" fill="#fff" stroke="${col}"/><text x="${x}" y="${y+4}" text-anchor="middle" font-size="12" font-weight="700" fill="${col}">${txt}</text>`};
+N.forEach(n=>{if(n.g&&vis(n))h+=line(byId[n.g],n,st(byId[n.g],n))});
+E.forEach(e=>{const a=byId[e[0]],b=byId[e[1]];if(!vis(a)||!vis(b))return;
+const k=[a.t,b.t];const cls=k.includes('u')?'ux':(k.includes('v')?'vac':(k.includes('g')?'gen':''));
+h+=line(a,b,cls+' '+st(a,b));if(e[2]){const on=!sel||sel===a.id||sel===b.id;h+=`<g class="${on?'':'dim'}">${tag((a.x+b.x)/2,a.y+(b.y-a.y)*.22,e[2],'#7d075c')}</g>`}});
+{const a=byId[GEN[0]],b=byId[GEN[1]];const on=!sel||sel===a.id||sel===b.id;
+h+=`<path class="edge gen ${st(a,b)}" d="M${a.x} ${a.y-a.h/2} Q750 300 ${b.x} ${b.y-b.h/2}"/><g class="${on?'':'dim'}">${tag(750,412,GEN[2],'#2b4052')}</g>`}
+MAIN.forEach(e=>{const a=byId[e[0]],b=byId[e[1]];const dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy);const ux=dx/len,uy=dy/len;
+const t=(n)=>Math.min(Math.abs((n.w/2+6)/(ux||1e-6)),Math.abs((n.h/2+6)/(uy||1e-6)));
+const x1=a.x+ux*t(a),y1=a.y+uy*t(a),x2=b.x-ux*t(b),y2=b.y-uy*t(b);const on=sel&&(sel===a.id||sel===b.id);
+h+=`<line class="edge main ${sel&&!on?'dim':''}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" marker-end="url(#ah)"/>`;
+const diag=Math.abs(dx)>10&&Math.abs(dy)>10;const f=diag?.2:.5;h+=`<g class="${sel&&!on?'dim':''}">${tag(x1+(x2-x1)*f,y1+(y2-y1)*f,e[2],'#2b4052')}</g>`});
+N.forEach(n=>{if(vis(n)){let s=nodeSvg(n);if(ns&&!ns.has(n.id))s=s.replace('class="node"','class="node dim"');h+=s}});
+document.getElementById('gmap').innerHTML=h}
+function showDetail(){const el=document.getElementById('detail');if(!sel){el.innerHTML='<p class="label">Detalle</p><p>Selecciona un nodo del mapa. Las flechas gruesas entre constructos forman el círculo vicioso. Las líneas delgadas unen cada concepto con los autores que lo sostienen; las punteadas moradas conectan a la usuaria y el contexto, que no son parte del círculo sino quién lo vive y dónde ocurre. Al centro está el vacío: selecciónalo para ver la bajada a diseño.</p>';return}
+const n=byId[sel];if(n.t==='v'){el.innerHTML=vacioHTML(false)+'<p class="label" style="margin-top:16px">Se conecta con</p>'+grpOf(sel);return}const T={c:'Constructo',k:'Concepto',a:'Autor',g:'Concepto general',u:'Usuaria y contexto'};const ns=[...neigh(sel)].filter(x=>x!==sel).map(x=>byId[x]);
+const grp=t=>{const a=ns.filter(x=>x.t===t);return a.length?`<p class="label" style="margin-top:8px">${{c:'Constructos',k:'Conceptos',a:'Autores',g:'Conceptos generales',u:'Usuaria y contexto',v:'Oportunidad de diseño'}[t]}</p><div class="row">${a.map(x=>`<button class="fbtn" style="text-transform:none;letter-spacing:.02em;font-weight:400" data-go="${x.id}">${esc(x.l)}</button>`).join('')}</div>`:''};
+el.innerHTML=`<p class="label">${T[n.t]}${n.g?' · '+byId[n.g].l:''}</p><h3>${esc(n.l)}</h3><p>${n.d}</p>${grp('v')}${grp('c')}${grp('g')}${grp('k')}${grp('u')}${grp('a')}${n.t==='c'?`<a class="meta" href="#${n.id}">Abrir la ficha del constructo</a>`:''}`}
+function pick(id){sel=(sel===id)?null:id;drawMap();showDetail()}
+document.getElementById('gmap').addEventListener('click',e=>{const g=e.target.closest('.node');if(g)pick(g.dataset.id)});
+document.getElementById('gmap').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const g=e.target.closest('.node');if(g){e.preventDefault();pick(g.dataset.id)}}});
+document.getElementById('detail').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b){sel=b.dataset.go;drawMap();showDetail()}});
+document.getElementById('filters').addEventListener('click',e=>{const b=e.target.closest('.fbtn');if(!b)return;if(b.id==='reset'){sel=null}else{const t=b.dataset.t;hide[t]=!hide[t];b.setAttribute('aria-pressed',String(!hide[t]));if(sel&&byId[sel].t===t&&hide[t])sel=null}drawMap();showDetail()});
+
+
+/* ---------- El vacío ---------- */
+function vacioHTML(dark){const L=dark?'label':'label';return `<div class="vac">
+<p class="${L}">El vacío · Oportunidad de diseño</p>
+<p class="${dark?'big':''}" ${dark?'':'style="font:700 22px/30px var(--font-sans);max-width:40ch"'}>La literatura sabe qué no funciona y hacia dónde apuntar, pero no dice con qué reemplazar el gesto.</p>
+<p>Es el punto donde el proyecto deja de describir el problema y pasa a diseñar. Reúne los cuatro constructos, la usuaria y el contexto en una sola pregunta: qué puede ocupar el lugar del desbloqueo cuando no tiene propósito.</p>
+<h3>Lo que no funciona</h3>
+<ul>
+<li>Quitar el estímulo externo: una semana sin notificaciones no cambió la frecuencia de desbloqueo ni el TeP (Dekker et al., 2025).</li>
+<li>Apelar a la voluntad: es exigente y poco sostenible (Koban, 2026).</li>
+<li>Restringir el tiempo: sacrifica también lo positivo, y la abstinencia suele ser inefectiva (Vanden Abeele, 2021).</li>
+</ul>
+<h3>Hacia dónde apunta la literatura</h3>
+<ul>
+<li>Introducir fricción y romper la continuidad del contexto, para devolverle conciencia e intención al gesto (Koban, 2026; Anderson &amp; Wood, 2020).</li>
+<li>Construir hábitos que reemplacen a los anteriores en vez de resistir tentaciones (Flayelle et al., 2023).</li>
+<li>Ofrecer otra vía para satisfacer el propósito que hay detrás del uso (Mostyn Sullivan &amp; George, 2023).</li>
+</ul>
+<h3>Lo que falta</h3>
+<p>Ninguna fuente dice qué reemplazo, para quién ni dónde. Ese es el aporte del proyecto.</p>
+<h3>La bajada a diseño</h3>
+<p>El momento exacto: una universitaria de 20 a 24 años, estudiando sola con el teléfono a la vista, siente el impulso de desbloquearlo sin propósito. Las preguntas que abre ese momento:</p>
+<ul>
+<li>¿Qué puede ocupar el lugar del gesto, de modo que también se vuelva hábito?</li>
+<li>¿Qué fricción devuelve la decisión sin castigar a la usuaria?</li>
+<li>¿Qué necesidad está detrás, aburrimiento o frustración con la tarea, y cómo se satisface sin el teléfono?</li>
+<li>¿Cómo responder sin aumentar el estrés de quien chequea por compulsión y no solo por hábito?</li>
+</ul>
+<p class="own2">Término propio del proyecto. No viene de las fuentes: se sostiene en fricción, propósito, uso no intencional, uso compensatorio y desbloqueo.</p>
+</div>`}
+function grpOf(id){const ns=[...neigh(id)].filter(x=>x!==id).map(x=>byId[x]);return `<div class="row">${ns.map(x=>`<button class="fbtn" style="text-transform:none;letter-spacing:.02em;font-weight:400" data-go="${x.id}">${esc(x.l)}</button>`).join('')}</div>`}
+document.getElementById('vacio-band').innerHTML=vacioHTML(true)+'<p style="margin-top:8px"><a href="#mapa" style="color:#fff" onclick="setTimeout(()=>pick(\'v\'),0)">Verlo conectado en el mapa</a></p>';
+
+/* ---------- Referencias ---------- */
+const R=[
+`Anderson, I. A., & Wood, W. (2020). Habits and the electronic herd: The psychology behind social media’s successes and failures. <i>Consumer Psychology Review</i>. Publicación anticipada en línea. https://doi.org/10.1002/arcp.1063 [El PDF del proyecto es la versión anticipada de 2020, paginada 1 a 17; verificar año, volumen y páginas de la versión final antes de citar en la memoria.]`,
+`Billieux, J., Maurage, P., Lopez-Fernandez, O., Kuss, D. J., & Griffiths, M. D. (2015). Can disordered mobile phone use be considered a behavioral addiction? An update on current evidence and a comprehensive model for future research. <i>Current Addiction Reports, 2</i>(2), 156–162. https://doi.org/10.1007/s40429-015-0054-y`,
+`Brand, M., Rumpf, H.-J., Demetrovics, Z., Müller, A., Stark, R., King, D. L., Goudriaan, A. E., Mann, K., Trotzke, P., Fineberg, N. A., Chamberlain, S. R., Kraus, S. W., Wegmann, E., Billieux, J., & Potenza, M. N. (2022). Which conditions should be considered as disorders in the International Classification of Diseases (ICD-11) designation of “other specified disorders due to addictive behaviors”? <i>Journal of Behavioral Addictions, 11</i>(2), 150–159. https://doi.org/10.1556/2006.2020.00035`,
+`Chen, X., Hedman, A., Distler, V., & Koenig, V. (2023). Do persuasive designs make smartphones more addictive? A mixed-methods study on Chinese university students. <i>Computers in Human Behavior Reports, 10</i>, Artículo 100299. [DOI por verificar]`,
+`Deceptive Design. (s.f.). <i>Types of deceptive pattern</i>. https://deceptive.design/types/ [Fuente de apoyo de C2, sin revisión por pares. El sitio lo creó Harry Brignull en 2010 según Monge Roffarello et al. (2023) y hoy lo opera Testimonium Ltd. Verificar autoría, año y fecha de consulta antes de citarlo en la memoria.]`,
+`Dekker, C. A., Baumgartner, S. E., Sumter, S. R., & Ohme, J. (2025). Beyond the buzz: Investigating the effects of a notification-disabling intervention on smartphone behavior and digital well-being. <i>Media Psychology, 28</i>(1), 162–188. https://doi.org/10.1080/15213269.2024.2334025`,
+`Demetrovics, Z., Czakó, A., Potenza, M. N., Griffiths, M. D., Fineberg, N. A., Stein, D. J., Ekhtiari, H., Brand, M., Montag, C., Lin, C.-Y., Li, L., Elhai, J. D., & Király, O. (2025). Are you on the internet or using screen-based devices? Revisiting the concepts of ‘internet addiction’ and ‘smartphone addiction’. <i>Journal of Behavioral Addictions</i>. Publicación anticipada en línea. https://doi.org/10.1556/2006.2025.00105`,
+`Flayelle, M., Brevers, D., King, D. L., Maurage, P., Perales, J. C., & Billieux, J. (2023). A taxonomy of technology design features that promote potentially addictive online behaviours. <i>Nature Reviews Psychology</i>. https://doi.org/10.1038/s44159-023-00153-4 [Volumen y páginas por verificar]`,
+`Guo, L., Fu, Y., Lin, X., Xu, X., Chang, Y.-J., & Hiniker, A. (2025). What social media use do people regret? An analysis of 34K smartphone screenshots with multimodal LLM. En <i>Proceedings of the 2025 CHI Conference on Human Factors in Computing Systems</i>. ACM. https://doi.org/10.1145/3706598.3713724`,
+`Heitmayer, M., & Lahlou, S. (2021). Why are smartphones disruptive? An empirical study of smartphone use in real-life contexts. <i>Computers in Human Behavior, 116</i>, Artículo 106637. https://doi.org/10.1016/j.chb.2020.106637`,
+`Koban, K. (2026). When digital connectivity drivers meet digital disconnection: A cross-country study on smartphone checking, digital disconnection strategies, and digital stress. <i>Mobile Media & Communication, 14</i>(2), 346–367. https://doi.org/10.1177/20501579251378561`,
+`Monge Roffarello, A., Lukoff, K., & De Russis, L. (2023). Defining and identifying attention capture deceptive designs in digital interfaces. En <i>Proceedings of the 2023 CHI Conference on Human Factors in Computing Systems (CHI ’23)</i>. ACM. https://doi.org/10.1145/3544548.3580729`,
+`Mostyn Sullivan, B., & George, A. M. (2023). The association of motives with problematic smartphone use: A systematic review. <i>Cyberpsychology: Journal of Psychosocial Research on Cyberspace, 17</i>(1), Artículo 2. https://doi.org/10.5817/CP2023-1-2`,
+`Panova, T., & Carbonell, X. (2018). Is smartphone addiction really an addiction? <i>Journal of Behavioral Addictions, 7</i>(2). https://doi.org/10.1556/2006.7.2018.49 [Páginas por verificar]`,
+`Vanden Abeele, M. M. P. (2021). Digital wellbeing as a dynamic construct. <i>Communication Theory, 31</i>(4), 932–955. https://doi.org/10.1093/ct/qtaa024`,
+`Zhang, Y., Shang, S., Tian, L., Zhu, L., & Zhang, W. (2023). The association between fear of missing out and mobile phone addiction: A meta-analysis. <i>BMC Psychology, 11</i>, Artículo 338. https://doi.org/10.1186/s40359-023-01376-z`];
+document.getElementById('refs').innerHTML=R.map(r=>'<p>'+r.replace(/(https:\/\/[^\s<\]]+)/,'<a href="$1">$1</a>')+'</p>').join('');
+
+/* ---------- Rutas ---------- */
+function route(){let h=(location.hash||'#proyecto').slice(1);if(!['proyecto','c1','c2','c3','c4','mapa','referencias'].includes(h))h='proyecto';
+document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+if(C[h]){renderC(h);document.getElementById('v-c').classList.add('on')}else document.getElementById('v-'+h).classList.add('on');
+document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+h));
+window.scrollTo(0,0)}
+window.addEventListener('hashchange',route);
+layout();drawMap();route();
+</script>
+</body>
+</html>
